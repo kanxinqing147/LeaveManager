@@ -1,15 +1,15 @@
 package com.softProject.pojo;
 
 public class User {
-    Integer username;
+    int userId;
     String password;
 
-    public Integer getUsername() {
-        return username;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUsername(Integer username) {
-        this.username = username;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     public String getPassword() {
@@ -23,7 +23,7 @@ public class User {
     @Override
     public String toString() {
         return "user{" +
-                "useerId=" + username +
+                "useerId=" + userId +
                 ", password='" + password + '\'' +
                 '}';
     }

@@ -4,7 +4,6 @@ import com.softProject.mapper.LoginMapper;
 import com.softProject.pojo.User;
 import com.softProject.service.LoginService;
 import com.softProject.util.SqlSessionFactoryUtils;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 
@@ -16,9 +15,9 @@ public class LoginServiceImpl implements LoginService {
         SqlSession sqlSession = sqlSessionFactory.openSession();
         LoginMapper loginMapper = sqlSession.getMapper(LoginMapper.class);
 
-        int username = user.getUsername();
+        int userId = user.getUserId();
         String password = user.getPassword();
-        boolean flag = loginMapper.selectByIdInStudent(username, password) != null || loginMapper.selectByIdInTeacher(username, password) != null;
+        boolean flag = loginMapper.selectByIdInStudent(userId, password) != null || loginMapper.selectByIdInTeacher(userId, password) != null;
 
         sqlSession.close();
         return flag;

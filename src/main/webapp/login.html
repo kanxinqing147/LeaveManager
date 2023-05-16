@@ -19,8 +19,8 @@
             <el-card class="login-card">
                 <h2 class="login-title">欢迎登录</h2>
                 <el-form class="login-form" ref="loginForm" :model="loginForm" :rules="loginRules">
-                    <el-form-item prop="username" label="Username">
-                        <el-input v-model="loginForm.username"></el-input>
+                    <el-form-item prop="userId" label="userId">
+                        <el-input v-model="loginForm.userId"></el-input>
                     </el-form-item>
                     <el-form-item prop="password" label="Password">
                         <el-input type="password" v-model="loginForm.password"></el-input>
@@ -42,23 +42,18 @@
             data() {
                 return {
                     loginForm: {
-                        username: '',
+                        userId: '',
                         password: ''
                     },
                     loginRules: {
-                        username: [
-                            { required: true, message: '请输入用户名', trigger: 'blur' },
+                        userId: [
+                            { required: true, message: '请输入账号', trigger: 'blur' },
                             { validator: this.validateUsername, trigger: 'blur' }
                         ],
                         password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
                     },
                     loading: false
                 }
-            },
-            mounted() {
-                //获取记住的密码
-                this.username = getCookieValue("username");
-                this.password = getCookieValue("password");
             },
             methods: {
                 validateUsername(rule, value, callback) {
@@ -71,7 +66,7 @@
                 login() {
                     this.$refs.loginForm.validate(valid => {
                         if (valid) {
-                            if (/^\d+$/.test(this.loginForm.username)) {
+                            if (/^\d+$/.test(this.loginForm.userId)) {
                                 axios({
                                     method: "post",
                                     url: contextPath + "/login/selectById",
@@ -79,10 +74,6 @@
                                 }).then(resp => {
                                     if (resp.data == "fail") {
                                         this.$message.error('用户名或密码错误');
-                                        this.loading = true
-                                        setTimeout(() => {
-                                            this.loading = false
-                                        }, 2000)
                                     }
                                 })
                             }

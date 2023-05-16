@@ -5,6 +5,6 @@ import com.softProject.pojo.Teacher;
 import org.apache.ibatis.annotations.Param;
 
 public interface LoginMapper {
-    Student selectByIdInStudent(@Param("username") int username, @Param("password") String password);
-    Teacher selectByIdInTeacher(@Param("username") int username, @Param("password") String password);
+    Student selectByIdInStudent(@Param("userId") int userId, @Param("password") String password);
+    Teacher selectByIdInTeacher(@Param("userId") int userId, @Param("password") String password);
 }

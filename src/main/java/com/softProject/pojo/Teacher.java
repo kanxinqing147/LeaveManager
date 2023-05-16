@@ -1,18 +1,8 @@
 package com.softProject.pojo;
 
-public class Teacher {
-    int teacherId;
+public class Teacher extends User {
     String teacherName;
     String gender;
-    String password;
-
-    public int getTeacherId() {
-        return teacherId;
-    }
-
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
-    }
 
     public String getTeacherName() {
         return teacherName;
@@ -30,20 +20,13 @@ public class Teacher {
         this.gender = gender;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     @Override
     public String toString() {
         return "Teacher{" +
-                "teacherId=" + teacherId +
-                ", teacherName='" + teacherName + '\'' +
+                "teacherName='" + teacherName + '\'' +
                 ", gender='" + gender + '\'' +
+                ", password='" + password + '\'' +
+                ", userId=" + userId +
                 ", password='" + password + '\'' +
                 '}';
     }
