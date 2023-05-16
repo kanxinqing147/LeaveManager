@@ -36,3 +36,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### nodeJs ####
+**/webapp/node_modules/
+**/webapp/
