@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="./js/util.js"></script>
+    <title>注册提示</title>
+    <style>
+        /* 样式可以根据你的需求进行修改 */
+        .container {
+            text-align: center;
+            margin-top: 200px;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p id="message">还没有注册哦</p>
+        <p id="countdown"></p>
+    </div>
+
+    <script>
+        var secondsLeft = 3;
+
+        function updateCountdown() {
+            var countdownElement = document.getElementById('countdown');
+            countdownElement.textContent = secondsLeft + '秒后跳转到登录页面';
+            secondsLeft--;
+
+            if (secondsLeft < 0) {
+                redirectToLoginPage();
+            } else {
+                setTimeout(updateCountdown, 1000); // 每秒更新一次倒计时
+            }
+        }
+
+        function redirectToLoginPage() {
+            let contextPath = getContextPath();
+            window.location.href = contextPath + "/login";  // 跳转到 login.html 页面
+        }
+
+        updateCountdown();
+    </script>
+</body>
+</html>

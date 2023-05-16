@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.softProject.mapper.LoginMapper">
+    <resultMap id="StudentResultMapper" type="Student">
+        <result property="studentId" column="student_id"/>
+        <result property="studentName" column="student_name"/>
+        <result property="gender" column="gender"/>
+        <result property="procession" column="procession"/>
+        <result property="grade" column="grade"/>
+        <result property="counsellor" column="counsellor"/>
+        <result property="password" column="password"/>
+    </resultMap>
+
+    <resultMap id="TeacherResultMapper" type="Teacher">
+        <result property="teacherId" column="teacher_id"/>
+        <result property="teacherName" column="teacher_name"/>
+        <result property="gender" column="gender"/>
+        <result property="password" column="password"/>
+    </resultMap>
+
+    <select id="selectByIdInStudent" resultMap="StudentResultMapper">
+        SELECT
+            *
+        FROM
+            student
+        WHERE
+            student_id = #{username} AND password = #{password}
+        ;
+    </select>
+
+    <select id="selectByIdInTeacher" resultMap="TeacherResultMapper">
+        SELECT
+            *
+        FROM
+            teacher
+        WHERE
+            teacher_id = #{username} AND password = #{password}
+        ;
+    </select>
+</mapper>
