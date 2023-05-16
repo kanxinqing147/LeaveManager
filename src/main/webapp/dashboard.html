@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./node_modules/vue/dist/vue.min.js"></script>
+    <script src="./node_modules/element-ui/lib/index.js"></script>
+    <script src="./node_modules/axios/dist/axios.min.js"></script>
+    <script src="./js/util.js"></script>
+    <link rel="stylesheet" href="./node_modules/element-ui/lib/theme-chalk/index.css">
+    <title>请销假系统</title>
+</head>
+
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <span class="user-info">{{ currentUser }}</span>
+                <el-button type="text" @click="logout">
+                    <i class="el-icon-switch-button"></i>
+                </el-button>
+            </div>
+            <el-menu default-active="1" class="sidebar-menu" router>
+                <el-menu-item index="1">
+                    <i class="el-icon-s-home"></i>
+                    <span slot="title">控制台</span>
+                </el-menu-item>
+                <el-menu-item index="2">
+                    <i class="el-icon-notebook-2"></i>
+                    <span slot="title">公告与文档</span>
+                </el-menu-item>
+                <el-menu-item index="3">
+                    <i class="el-icon-date"></i>
+                    <span slot="title">请假状态</span>
+                </el-menu-item>
+                <el-menu-item index="4">
+                    <i class="el-icon-user"></i>
+                    <span slot="title">个人中心</span>
+                </el-menu-item>
+            </el-menu>
+        </div>
+        <div class="content">
+            <h2 class="title">公告</h2>
+            <div class="notice-list">
+                <transition-group name="fade">
+                    <div v-for="notice in notices" :key="notice.id" class="notice">
+                        <div class="notice-header">
+                            <h3>{{ notice.title }}</h3>
+                            <span class="notice-date">{{ notice.date }}</span>
+                        </div>
+                        <p>{{ notice.content }}</p>
+                    </div>
+                </transition-group>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: ".dashboard",
+            data() {
+                return {
+                    currentUser: 'John Doe', // 当前用户
+                    notices: [ // 公告列表
+                        {
+                            id: 1,
+                            title: '重要公告',
+                            content: '这是一条重要公告的内容。'
+                        },
+                        {
+                            id: 2,
+                            title: '系统更新',
+                            content: '系统将于下周进行更新，请注意备份数据。'
+                        },
+                        {
+                            id: 3,
+                            title: '节假日安排',
+                            content: '公司将在本周五放假，祝大家假期愉快！'
+                        }
+                    ]
+                }
+            },
+            methods: {
+                logout() {
+                    // 执行退出账号逻辑，例如清除登录状态等
+                    console.log('Logged out');
+                }
+            }
+        });
+    </script>
+
+    <style scoped>
+        .dashboard {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 200px;
+            background-color: #333;
+            color: white;
+            padding: 20px;
+            overflow: hidden;
+            transition: width 0.3s;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            transition: margin-bottom 0.3s;
+        }
+
+        .sidebar-header.collapsed {
+            margin-bottom: 0;
+        }
+
+        .user-info {
+            margin-right: 10px;
+            transition: opacity 0.3s;
+            color: white;
+        }
+
+        .user-info.collapsed {
+            opacity: 0;
+        }
+
+        .sidebar-menu {
+            background-color: transparent;
+            border: none;
+            margin-top: 20px;
+        }
+
+        .sidebar-menu.collapsed {
+            margin-top: 0;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .title {
+            margin-bottom: 20px;
+        }
+
+        .notice {
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+            transition: opacity 0.5s;
+        }
+
+        .fade-enter-active,
+        .fade-leave-active {
+            transition: opacity 0.5s;
+        }
+
+        .fade-enter,
+        .fade-leave-to {
+            opacity: 0;
+        }
+
+        .notice-list {
+            position: relative;
+        }
+
+        .notice {
+            background-color: #f7f7f7;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .notice-enter-active,
+        .notice-leave-active {
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .notice-enter,
+        .notice-leave-to {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .notice-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .notice-date {
+            color: #888;
+        }
+
+        .notice p {
+            margin: 0;
+        }
+
+
+        .el-button i {
+            transition: transform 0.3s;
+        }
+
+        .el-button.collapsed i {
+            transform: rotate(-180deg);
+        }
+
+        .el-menu-item {
+            color: white;
+        }
+    </style>
+</body>
+
+</html>
