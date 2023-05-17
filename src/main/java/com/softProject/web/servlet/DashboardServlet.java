@@ -35,6 +35,22 @@ public class DashboardServlet extends BaseServlet{
         inputStream.close();
     }
 
+    public void notify(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/html;charset=utf-8");
+
+        InputStream inputStream = getServletContext().getResourceAsStream("./notify.html");
+        OutputStream outputStream = response.getOutputStream();
+
+        byte[] buff = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buff)) != -1) {
+            outputStream.write(buff, 0, bytesRead);
+        }
+
+        outputStream.close();
+        inputStream.close();
+    }
+
     public void selectInNotifyByConditions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int currentPage = Integer.parseInt(request.getParameter("currentPage"));
         int pageSize = Integer.parseInt(request.getParameter("pageSize"));
@@ -45,6 +61,22 @@ public class DashboardServlet extends BaseServlet{
         Notify notify = JSON.parseObject(params, Notify.class);
 
         PageBean<Notify> pageBean = dashboardService.selectByCondition(currentPage, pageSize, notify);
+        String jsonString = JSON.toJSONString(pageBean);
+
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(jsonString);
+    }
+
+    public void selectInNotifyViewByConditions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+        int pageSize = Integer.parseInt(request.getParameter("pageSize"));
+
+        BufferedReader br = request.getReader();
+        String params = br.readLine();
+        params = new String(params.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        NotifyView notifyView = JSON.parseObject(params, NotifyView.class);
+
+        PageBean<NotifyView> pageBean = dashboardService.selectInNotifyViewByConditions(currentPage, pageSize, notifyView);
         String jsonString = JSON.toJSONString(pageBean);
 
         response.setContentType("text/json;charset=utf-8");

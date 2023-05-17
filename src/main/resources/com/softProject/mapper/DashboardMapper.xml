@@ -29,6 +29,15 @@
         <result property="actionDesc" column="action_desc"/>
     </resultMap>
 
+    <resultMap id="NotifyViewResultMap" type="NotifyView">
+        <result property="notifyId" column="notify_id"/>
+        <result property="studentName" column="student_name"/>
+        <result property="teacherName" column="teacher_name"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifyTime" column="modify_time"/>
+        <result property="actionDesc" column="action_desc"/>
+    </resultMap>
+
     <select id="selectInNotifyByConditions" resultMap="NotifyResultMap">
         SELECT
             *
@@ -57,6 +66,36 @@
         LIMIT
             #{begin},
             #{size}
+    </select>
+
+    <select id="selectInNotifyViewByConditions" resultMap="NotifyViewResultMap">
+        SELECT
+            *
+        FROM
+            notify_view
+        <where>
+            <if test="notifyView.notifyID != null and notifyView.notifyID != ''">
+                AND notify_id like #{notifyView.notifyID}
+            </if>
+            <if test="notifyView.studentName != null and notifyView.studentName != ''">
+                AND student_name like #{notifyView.studentName}
+            </if>
+            <if test="notifyView.teacherName != null and notifyView.teacherName != ''">
+                AND teacher_name like #{notifyView.teacherName}
+            </if>
+            <if test="notifyView.createTime != null and notifyView.createTime != ''">
+                AND create_time like #{notifyView.createTime}
+            </if>
+            <if test="notifyView.modifyTime != null and notifyView.modifyTime != ''">
+                AND modify_time like #{notifyView.modifyTime}
+            </if>
+            <if test="notifyView.actionDesc != null and notifyView.actionDesc != ''">
+                AND actionDesc like #{notifyView.actionDesc}
+            </if>
+        </where>
+        LIMIT
+        #{begin},
+        #{size}
     </select>
 
     <select id="selectInNotifyCount" resultType="int">
@@ -103,5 +142,31 @@
         WHERE
             teacher_id = #{teacherId}
         ;
+    </select>
+    <select id="selectInNotifyViewCount" resultType="int">
+        SELECT
+            count(*)
+        FROM
+        notify_view
+        <where>
+            <if test="notifyView.notifyID != null and notifyView.notifyID != ''">
+                AND notify_id like #{notifyView.notifyID}
+            </if>
+            <if test="notifyView.studentName != null and notifyView.studentName != ''">
+                AND student_name like #{notifyView.studentName}
+            </if>
+            <if test="notifyView.teacherName != null and notifyView.teacherName != ''">
+                AND teacher_name like #{notifyView.teacherName}
+            </if>
+            <if test="notifyView.createTime != null and notifyView.createTime != ''">
+                AND create_time like #{notifyView.createTime}
+            </if>
+            <if test="notifyView.modifyTime != null and notifyView.modifyTime != ''">
+                AND modify_time like #{notifyView.modifyTime}
+            </if>
+            <if test="notifyView.actionDesc != null and notifyView.actionDesc != ''">
+                AND actionDesc like #{notifyView.actionDesc}
+            </if>
+        </where>
     </select>
 </mapper>

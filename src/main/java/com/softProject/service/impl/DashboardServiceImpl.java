@@ -1,10 +1,7 @@
 package com.softProject.service.impl;
 
 import com.softProject.mapper.DashboardMapper;
-import com.softProject.pojo.Notify;
-import com.softProject.pojo.PageBean;
-import com.softProject.pojo.Student;
-import com.softProject.pojo.Teacher;
+import com.softProject.pojo.*;
 import com.softProject.service.DashboardService;
 import com.softProject.util.SqlSessionFactoryUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -29,6 +26,38 @@ public class DashboardServiceImpl implements DashboardService {
         PageBean<Notify> pageBean = new PageBean<>();
         pageBean.setTotalCount(totalPages);
         pageBean.setRows(notifies);
+
+        sqlSession.close();
+        return  pageBean;
+    }
+
+    @Override
+    public PageBean<NotifyView> selectInNotifyViewByConditions(int currentPage, int pageSize, NotifyView notifyView) {
+        int begin = (currentPage - 1) * pageSize;
+        int size = pageSize;
+
+        String studentName = notifyView.getStudentName();
+        if (studentName != null && studentName.length() > 0) {
+            notifyView.setStudentName("%" + studentName + "%");
+        }
+        String teacherName = notifyView.getTeacherName();
+        if (teacherName != null && teacherName.length() > 0) {
+            notifyView.setTeacherName("%" + teacherName + "%");
+        }
+        String actionDesc = notifyView.getActionDesc();
+        if (actionDesc != null && actionDesc.length() > 0) {
+            notifyView.setActionDesc("%" + actionDesc + "%");
+        }
+
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        DashboardMapper dashboardMapper = sqlSession.getMapper(DashboardMapper.class);
+
+        List<NotifyView> notifyViews = dashboardMapper.selectInNotifyViewByConditions(begin, size, notifyView);
+        int totalPages = dashboardMapper.selectInNotifyViewCount(notifyView);
+
+        PageBean<NotifyView> pageBean = new PageBean<>();
+        pageBean.setTotalCount(totalPages);
+        pageBean.setRows(notifyViews);
 
         sqlSession.close();
         return  pageBean;

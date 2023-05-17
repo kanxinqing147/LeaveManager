@@ -1,13 +1,12 @@
 package com.softProject.service;
 
-import com.softProject.pojo.Notify;
-import com.softProject.pojo.PageBean;
-import com.softProject.pojo.Student;
-import com.softProject.pojo.Teacher;
+import com.softProject.pojo.*;
 
 public interface DashboardService {
 
     PageBean<Notify> selectByCondition(int currentPage, int pageSize, Notify notify);
+
+    PageBean<NotifyView> selectInNotifyViewByConditions(int currentPage, int pageSize, NotifyView notifyView);
 
     Student selectByStudentId(int studentId);
 

@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./node_modules/vue/dist/vue.min.js"></script>
-    <script src="./node_modules/element-ui/lib/index.js"></script>
-    <script src="./node_modules/axios/dist/axios.min.js"></script>
-    <script src="./js/util.js"></script>
-    <link rel="stylesheet" href="./node_modules/element-ui/lib/theme-chalk/index.css">
+    <script src="../node_modules/vue/dist/vue.min.js"></script>
+    <script src="../node_modules/element-ui/lib/index.js"></script>
+    <script src="../node_modules/axios/dist/axios.min.js"></script>
+    <script src="../js/util.js"></script>
+    <link rel="stylesheet" href="../node_modules/element-ui/lib/theme-chalk/index.css">
     <title>请销假系统</title>
 </head>
 
@@ -23,50 +23,71 @@
                 </el-button>
             </div>
             <el-menu default-active="1" class="sidebar-menu" router>
-                <el-menu-item index="1" @click="linkToDashboard">
+                <el-menu-item index="2" @click="linkToDashboard">
                     <i class="el-icon-s-home"></i>
                     <span slot="title">控制台</span>
                 </el-menu-item>
-                <el-menu-item index="2" @click="linkToNotify">
+                <el-menu-item index="1" @click="linkToNotify">
                     <i class="el-icon-notebook-2"></i>
                     <span slot="title">公告与文档</span>
                 </el-menu-item>
-                <el-menu-item index="3">
-                    <i class="el-icon-date" @click="linkToAbsence"></i>
+                <el-menu-item index="3" @click="linkToAbsence">
+                    <i class="el-icon-date"></i>
                     <span slot="title">请假状态</span>
                 </el-menu-item>
-                <el-menu-item index="4">
-                    <i class="el-icon-user" @click="linkToUser"></i>
+                <el-menu-item index="4" @click="linkToUser">
+                    <i class="el-icon-user"></i>
                     <span slot="title">个人中心</span>
                 </el-menu-item>
             </el-menu>
         </div>
         <div class="content">
-            <h2 class="title">公告</h2>
-            <div class="notice-list">
-                <transition-group name="fade">
-                    <div v-for="notice in notices" :key="notice.notifyId" class="notice">
-                        <div class="notice-header">
-                            <h3>{{ notice.modifyTimeStr }}</h3>
-                            <span class="notice-date">{{ notice.actionDesc }}</span>
-                        </div>
-                        <p>{{ notice.applicantId }}号学生向{{ notice.handlerId }}号处理人{{ notice.actionDesc }}</p>
-                    </div>
-                </transition-group>
-            </div>
+            <el-form :inline="true" :model="queryKey" class="demo-form-inline">
+                <el-form-item label="申请人名称">
+                    <el-input v-model="queryKey.studentName" placeholder="申请人名称"></el-input>
+                </el-form-item>
+                <el-form-item label="处理人名称">
+                    <el-input v-model="queryKey.teacherName" placeholder="处理人名称"></el-input>
+                </el-form-item>
+                <el-form-item label="处理内容">
+                    <el-input v-model="queryKey.actionDesc" placeholder="处理内容"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="GetNotify()">查询</el-button>
+                    <el-button type="success" @click="resetTableData()">重置</el-button>
+                </el-form-item>
+            </el-form>
+            <el-table :data="tableData" border stripe class="custom-table">
+                <el-table-column prop="modifyTimeStr" label="日期" width="180">
+                </el-table-column>
+                <el-table-column prop="studentName" label="申请人" width="180">
+                </el-table-column>
+                <el-table-column prop="teacherName" label="处理人" width="180">
+                </el-table-column>
+                <el-table-column prop="actionDesc" label="处理内容">
+                </el-table-column>
+            </el-table>
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                :current-page="currentPage" :page-sizes="[10, 20, 30, 40]" :page-size="100"
+                layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
+            </el-pagination>
         </div>
+    </div>
     </div>
 
     <script>
         var contextPath = getContextPath();
 
-        new Vue({
+        let a = new Vue({
             el: ".dashboard",
             data() {
                 return {
                     currentUser: '', // 当前用户
-                    notices: [], // 公告列表
-                    queryKey: {}
+                    currentPage: 1,
+                    pageSize: 10,
+                    totalCount: "",
+                    queryKey: {},
+                    tableData: []
                 }
             },
             mounted() {
@@ -78,15 +99,33 @@
                     this.currentUser = resp.data
                 })
                 //获取公告
-                axios({
-                    method: "post",
-                    url: contextPath + "/dashboard/selectInNotifyByConditions?currentPage=" + 1 + "&pageSize=" + 3,
-                    data: this.queryKey
-                }).then(resp => {
-                    this.notices = resp.data.rows
-                })
+                this.GetNotify()
             },
             methods: {
+                GetNotify() {
+                    axios({
+                        method: "post",
+                        url: contextPath + "/dashboard/selectInNotifyViewByConditions?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
+                        data: this.queryKey
+                    }).then(resp => {
+                        this.tableData = resp.data.rows
+                        this.totalCount = resp.data.totalCount
+                    })
+                },
+                resetTableData() {
+                    this.queryKey = {}
+                    this.GetNotify()
+                },
+                handleSizeChange(val) {
+                    //console.log(`每页 ${val} 条`);
+                    this.pageSize = val;
+                    this.GetNotify();
+                },
+                handleCurrentChange(val) {
+                    //console.log(`当前页: ${val}`);
+                    this.currentPage = val;
+                    this.GetNotify();
+                },
                 logout() {
                     // 执行退出账号逻辑，例如清除登录状态等
                     axios({
@@ -157,7 +196,6 @@
             margin-top: 20px;
         }
 
-
         .el-menu-item {
             color: white;
         }
@@ -171,35 +209,8 @@
             padding: 20px;
         }
 
-        .title {
-            margin-bottom: 20px;
-        }
-
-        .notice-list {
-            position: relative;
-        }
-
-        .notice {
-            background-color: #f7f7f7;
-            border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .notice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .notice-date {
-            color: #888;
-        }
-
-        .notice p {
-            margin: 0;
+        .custom-table {
+            width: 90%;
         }
     </style>
 </body>
