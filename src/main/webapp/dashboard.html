@@ -45,12 +45,12 @@
             <h2 class="title">公告</h2>
             <div class="notice-list">
                 <transition-group name="fade">
-                    <div v-for="notice in notices" :key="notice.id" class="notice">
+                    <div v-for="notice in notices" :key="notice.notifyId" class="notice">
                         <div class="notice-header">
-                            <h3>{{ notice.title }}</h3>
-                            <span class="notice-date">{{ notice.date }}</span>
+                            <h3>{{ notice.modifyTimeStr }}</h3>
+                            <span class="notice-date">{{ notice.actionDesc }}</span>
                         </div>
-                        <p>{{ notice.content }}</p>
+                        <p>{{ notice.applicantId }}号学生向{{ notice.handlerId }}号处理人{{ notice.actionDesc }}</p>
                     </div>
                 </transition-group>
             </div>
@@ -58,34 +58,42 @@
     </div>
 
     <script>
+        var contextPath = getContextPath();
+
         new Vue({
             el: ".dashboard",
             data() {
                 return {
-                    currentUser: 'John Doe', // 当前用户
-                    notices: [ // 公告列表
-                        {
-                            id: 1,
-                            title: '重要公告',
-                            content: '这是一条重要公告的内容。'
-                        },
-                        {
-                            id: 2,
-                            title: '系统更新',
-                            content: '系统将于下周进行更新，请注意备份数据。'
-                        },
-                        {
-                            id: 3,
-                            title: '节假日安排',
-                            content: '公司将在本周五放假，祝大家假期愉快！'
-                        }
-                    ]
+                    currentUser: '', // 当前用户
+                    notices: [], // 公告列表
+                    queryKey: {}
                 }
+            },
+            mounted() {
+                //获取用户名
+                axios({
+                    methods: "get",
+                    url: contextPath + "/dashboard/getUsername"
+                }).then(resp => {
+                    this.currentUser = resp.data
+                })
+                //获取公告
+                axios({
+                    method: "post",
+                    url: contextPath + "/dashboard/selectInNotifyByConditions?currentPage=" + 1 + "&pageSize=" + 3,
+                    data: this.queryKey
+                }).then(resp => {
+                    this.notices = resp.data.rows
+                })
             },
             methods: {
                 logout() {
                     // 执行退出账号逻辑，例如清除登录状态等
-                    console.log('Logged out');
+                    axios({
+                        method: "get",
+                        url: contextPath + "/dashboard/deleteSession"
+                    })
+                    window.location.href = contextPath + "/login"
                 }
             }
         });

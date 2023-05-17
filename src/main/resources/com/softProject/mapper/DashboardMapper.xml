@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.softProject.mapper.DashboardMapper">
+    <resultMap id="StudentResultMapper" type="Student">
+        <result property="userId" column="student_id"/>
+        <result property="studentName" column="student_name"/>
+        <result property="gender" column="gender"/>
+        <result property="procession" column="procession"/>
+        <result property="grade" column="grade"/>
+        <result property="counsellor" column="counsellor"/>
+        <result property="password" column="password"/>
+    </resultMap>
+
+    <resultMap id="TeacherResultMapper" type="Teacher">
+        <result property="userId" column="teacher_id"/>
+        <result property="teacherName" column="teacher_name"/>
+        <result property="gender" column="gender"/>
+        <result property="password" column="password"/>
+    </resultMap>
+
+    <resultMap id="NotifyResultMap" type="Notify">
+        <result property="notifyId" column="notify_id"/>
+        <result property="applicantId" column="applicant_id"/>
+        <result property="handlerId" column="handler_id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="modifyTime" column="modify_time"/>
+        <result property="actionDesc" column="action_desc"/>
+    </resultMap>
+
+    <select id="selectInNotifyByConditions" resultMap="NotifyResultMap">
+        SELECT
+            *
+        FROM
+            notify
+        <where>
+            <if test="notify.notifyID != null and notify.notifyID != ''">
+                AND notify_id like #{notify.notifyID}
+            </if>
+            <if test="notify.applicantId != null and notify.applicantId != ''">
+                AND applicant_id like #{notify.notifyID}
+            </if>
+            <if test="notify.handlerId != null and notify.handlerId != ''">
+                AND handler_id like #{notify.handlerId}
+            </if>
+            <if test="notify.createTime != null and notify.createTime != ''">
+                AND create_time like #{notify.createTime}
+            </if>
+            <if test="notify.modifyTime != null and notify.modifyTime != ''">
+                AND modify_time like #{notify.modifyTime}
+            </if>
+            <if test="notify.actionDesc != null and notify.actionDesc != ''">
+                AND actionDesc like #{notify.actionDesc}
+            </if>
+        </where>
+        LIMIT
+            #{begin},
+            #{size}
+    </select>
+
+    <select id="selectInNotifyCount" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            notify
+        <where>
+            <if test="notify.notifyID != null and notify.notifyID != ''">
+                AND notify_id like #{notify.notifyID}
+            </if>
+            <if test="notify.applicantId != null and notify.applicantId != ''">
+                AND applicant_id like #{notify.notifyID}
+            </if>
+            <if test="notify.handlerId != null and notify.handlerId != ''">
+                AND handler_id like #{notify.handlerId}
+            </if>
+            <if test="notify.createTime != null and notify.createTime != ''">
+                AND create_time like #{notify.createTime}
+            </if>
+            <if test="notify.modifyTime != null and notify.modifyTime != ''">
+                AND modify_time like #{notify.modifyTime}
+            </if>
+            <if test="notify.actionDesc != null and notify.actionDesc != ''">
+                AND actionDesc like #{notify.actionDesc}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByStudentId" resultMap="StudentResultMapper">
+        SELECT
+            *
+        FROM
+            student
+        WHERE
+            student_id = #{studentId}
+        ;
+    </select>
+    <select id="selectByTeacherId" resultMap="TeacherResultMapper">
+        SELECT
+            *
+        FROM
+            teacher
+        WHERE
+            teacher_id = #{teacherId}
+        ;
+    </select>
+</mapper>

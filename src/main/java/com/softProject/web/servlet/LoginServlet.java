@@ -46,9 +46,9 @@ public class LoginServlet extends BaseServlet {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
 
-            //跳转到面板
-            String contextPath = request.getContextPath();
-            response.sendRedirect(contextPath + "/dashboard");
+            //发送成功消息
+            response.setContentType("text/text;charset=utf-8");
+            response.getWriter().write("success");
         } else {
             response.setContentType("text/text;charset=utf-8");
             response.getWriter().write("fail");

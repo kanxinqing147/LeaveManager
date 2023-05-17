@@ -74,6 +74,8 @@
                                 }).then(resp => {
                                     if (resp.data == "fail") {
                                         this.$message.error('用户名或密码错误');
+                                    } else {
+                                        window.location.href = contextPath + "/dashboard"
                                     }
                                 })
                             }
