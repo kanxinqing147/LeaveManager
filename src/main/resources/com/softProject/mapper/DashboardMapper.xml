@@ -38,6 +38,15 @@
         <result property="actionDesc" column="action_desc"/>
     </resultMap>
 
+    <resultMap id="AbsenceResultMap" type="Absence">
+        <result property="absenceId" column="absence_id"/>
+        <result property="studentName" column="student_name"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="approve" column="approve"/>
+        <result property="reason" column="reason"/>
+    </resultMap>
+
     <select id="selectInNotifyByConditions" resultMap="NotifyResultMap">
         SELECT
             *
@@ -147,7 +156,7 @@
         SELECT
             count(*)
         FROM
-        notify_view
+            notify_view
         <where>
             <if test="notifyView.notifyID != null and notifyView.notifyID != ''">
                 AND notify_id like #{notifyView.notifyID}
@@ -166,6 +175,52 @@
             </if>
             <if test="notifyView.actionDesc != null and notifyView.actionDesc != ''">
                 AND actionDesc like #{notifyView.actionDesc}
+            </if>
+        </where>
+    </select>
+    <select id="selectInAbsenceByConditions" resultMap="AbsenceResultMap">
+        SELECT
+            absence.absence_id,
+            student.student_name,
+            absence.start_time,
+            absence.end_time,
+            absence.approve,
+            absence.reason
+        FROM
+            absence,
+            student
+        <where>
+            absence.s_id = student.student_id
+            <if test="absence.studentName != null and absence.studentName != ''">
+                AND student.student_name like #{absence.studentName}
+            </if>
+            <if test="absence.approve != null">
+                AND absence.approve = #{absence.approve}
+            </if>
+            <if test="absence.reason != null and absence.reason != ''">
+                AND absence.reason like #{absence.reason}
+            </if>
+        </where>
+        LIMIT
+        #{begin},
+        #{size}
+    </select>
+    <select id="selectInAbsenceByCount" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            absence,
+            student
+        <where>
+            absence.s_id = student.student_id
+            <if test="absence.studentName != null and absence.studentName != ''">
+                AND student.student_name like #{absence.studentName}
+            </if>
+            <if test="absence.approve != null">
+                AND absence.approve = #{absence.approve}
+            </if>
+            <if test="absence.reason != null and absence.reason != ''">
+                AND absence.reason like #{absence.reason}
             </if>
         </where>
     </select>

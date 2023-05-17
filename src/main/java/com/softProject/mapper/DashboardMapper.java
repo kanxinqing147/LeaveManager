@@ -1,9 +1,6 @@
 package com.softProject.mapper;
 
-import com.softProject.pojo.Notify;
-import com.softProject.pojo.NotifyView;
-import com.softProject.pojo.Student;
-import com.softProject.pojo.Teacher;
+import com.softProject.pojo.*;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -20,4 +17,8 @@ public interface DashboardMapper {
     Student selectByStudentId(@Param("studentId") int studentId);
 
     Teacher selectByTeacherId(@Param("teacherId") int teacherId);
+
+    List<Absence> selectInAbsenceByConditions(@Param("begin") int begin, @Param("size") int size, @Param("absence") Absence absence);
+
+    int selectInAbsenceByCount(Absence absence);
 }

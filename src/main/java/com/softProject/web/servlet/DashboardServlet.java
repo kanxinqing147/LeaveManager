@@ -17,7 +17,7 @@ import java.nio.charset.StandardCharsets;
 
 @WebServlet(urlPatterns = "/dashboard/*")
 public class DashboardServlet extends BaseServlet{
-    private DashboardService dashboardService = new DashboardServiceImpl();
+    private final DashboardService dashboardService = new DashboardServiceImpl();
 
     public void dashboard(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html;charset=utf-8");
@@ -39,6 +39,22 @@ public class DashboardServlet extends BaseServlet{
         response.setContentType("text/html;charset=utf-8");
 
         InputStream inputStream = getServletContext().getResourceAsStream("./notify.html");
+        OutputStream outputStream = response.getOutputStream();
+
+        byte[] buff = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buff)) != -1) {
+            outputStream.write(buff, 0, bytesRead);
+        }
+
+        outputStream.close();
+        inputStream.close();
+    }
+
+    public void absence(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setContentType("text/html;charset=utf-8");
+
+        InputStream inputStream = getServletContext().getResourceAsStream("./absence.html");
         OutputStream outputStream = response.getOutputStream();
 
         byte[] buff = new byte[1024];
@@ -103,5 +119,23 @@ public class DashboardServlet extends BaseServlet{
     public void deleteSession(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         session.invalidate();
+    }
+
+    public void selectInAbsenceByConditions(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        int currentPage = Integer.parseInt(request.getParameter("currentPage"));
+        int pageSize = Integer.parseInt(request.getParameter("pageSize"));
+
+        BufferedReader br = request.getReader();
+        String params = br.readLine();
+        params = new String(params.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+        // NotifyView notifyView = JSON.parseObject(params, NotifyView.class);
+        Absence absence = JSON.parseObject(params, Absence.class);
+
+        PageBean<Absence> pageBean = dashboardService.selectInAbsenceByConditions(currentPage, pageSize, absence);
+        // PageBean<NotifyView> pageBean = dashboardService.selectInNotifyViewByConditions(currentPage, pageSize, notifyView);
+        String jsonString = JSON.toJSONString(pageBean);
+
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(jsonString);
     }
 }

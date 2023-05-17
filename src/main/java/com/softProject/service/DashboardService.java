@@ -11,4 +11,6 @@ public interface DashboardService {
     Student selectByStudentId(int studentId);
 
     Teacher selectByTeacherId(int teacherId);
+
+    PageBean<Absence> selectInAbsenceByConditions(int currentPage, int pageSize, Absence absence);
 }

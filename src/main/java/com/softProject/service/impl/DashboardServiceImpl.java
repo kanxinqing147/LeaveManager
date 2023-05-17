@@ -84,4 +84,26 @@ public class DashboardServiceImpl implements DashboardService {
         sqlSession.close();
         return teacher;
     }
+
+    @Override
+    public PageBean<Absence> selectInAbsenceByConditions(int currentPage, int pageSize, Absence absence) {
+        int begin = (currentPage - 1) * pageSize;
+        int size = pageSize;
+
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        DashboardMapper dashboardMapper = sqlSession.getMapper(DashboardMapper.class);
+
+        List<Absence> absences =  dashboardMapper.selectInAbsenceByConditions(begin, size, absence);
+        int totalPages = dashboardMapper.selectInAbsenceByCount(absence);
+        // List<NotifyView> notifyViews = dashboardMapper.selectInNotifyViewByConditions(begin, size, notifyView);
+        // int totalPages = dashboardMapper.selectInNotifyViewCount(notifyView);
+
+        PageBean<Absence> pageBean = new PageBean<>();
+        // PageBean<NotifyView> pageBean = new PageBean<>();
+        pageBean.setTotalCount(totalPages);
+        pageBean.setRows(absences);
+
+        sqlSession.close();
+        return  pageBean;
+    }
 }
