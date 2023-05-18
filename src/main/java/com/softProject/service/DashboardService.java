@@ -15,4 +15,6 @@ public interface DashboardService {
     PageBean<Absence> selectInAbsenceByConditions(int currentPage, int pageSize, Absence absence);
 
     void deleteByAbsenceIds(int[] ids);
+
+    boolean insertAbsence(Absence absence);
 }

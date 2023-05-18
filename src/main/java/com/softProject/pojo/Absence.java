@@ -5,6 +5,7 @@ import java.util.Date;
 
 public class Absence {
     int absenceId;
+    int studentId;
     String studentName;
     Date startTime;
     Date endTime;
@@ -17,6 +18,14 @@ public class Absence {
 
     public void setAbsenceId(int absenceId) {
         this.absenceId = absenceId;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(int studentId) {
+        this.studentId = studentId;
     }
 
     public String getStudentName() {
@@ -80,6 +89,7 @@ public class Absence {
     public String toString() {
         return "Absence{" +
                 "absenceId=" + absenceId +
+                ", studentId=" + studentId +
                 ", studentName='" + studentName + '\'' +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +

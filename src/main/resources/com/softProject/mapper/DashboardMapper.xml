@@ -40,12 +40,24 @@
 
     <resultMap id="AbsenceResultMap" type="Absence">
         <result property="absenceId" column="absence_id"/>
+        <result property="studentId" column="s_id"/>
         <result property="studentName" column="student_name"/>
         <result property="startTime" column="start_time"/>
         <result property="endTime" column="end_time"/>
         <result property="approve" column="approve"/>
         <result property="reason" column="reason"/>
     </resultMap>
+
+    <insert id="insertAbsence">
+        insert into
+            absence(s_id, start_time, end_time, reason)
+        values(
+            #{absence.studentId},
+            #{absence.startTime},
+            #{absence.endTime},
+            #{absence.reason}
+        );
+    </insert>
 
     <delete id="deleteByAbsenceIds">
         DELETE FROM
@@ -192,6 +204,7 @@
     <select id="selectInAbsenceByConditions" resultMap="AbsenceResultMap">
         SELECT
             absence.absence_id,
+            absence.s_id,
             student.student_name,
             absence.start_time,
             absence.end_time,

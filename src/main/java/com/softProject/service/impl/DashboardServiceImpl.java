@@ -123,4 +123,19 @@ public class DashboardServiceImpl implements DashboardService {
         sqlSession.commit();
         sqlSession.close();
     }
+
+    @Override
+    public boolean insertAbsence(Absence absence) {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        DashboardMapper dashboardMapper = sqlSession.getMapper(DashboardMapper.class);
+
+        if (dashboardMapper.selectByStudentId(absence.getStudentId()) == null) {
+            return false;
+        }
+        dashboardMapper.insertAbsence(absence);
+
+        sqlSession.commit();
+        sqlSession.close();
+        return true;
+    }
 }
