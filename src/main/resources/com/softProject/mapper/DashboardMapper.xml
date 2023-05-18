@@ -85,6 +85,18 @@
         ;
     </update>
 
+    <update id="updateTeacher">
+        UPDATE
+            teacher
+        SET
+            teacher_name = #{teacher.teacherName},
+            password = #{teacher.password},
+            gender = #{teacher.gender}
+        WHERE
+            teacher_id = #{teacher.userId}
+        ;
+    </update>
+
     <delete id="deleteByAbsenceIds">
         DELETE FROM
             absence

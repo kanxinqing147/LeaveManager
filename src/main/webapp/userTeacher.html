@@ -42,35 +42,29 @@
             </el-menu>
         </div>
         <div class="content">
-            <el-form :inline="true" :model="queryKey" class="demo-form-inline">
-                <el-form-item label="申请人名称">
-                    <el-input v-model="queryKey.studentName" placeholder="申请人名称"></el-input>
-                </el-form-item>
-                <el-form-item label="处理人名称">
-                    <el-input v-model="queryKey.teacherName" placeholder="处理人名称"></el-input>
-                </el-form-item>
-                <el-form-item label="处理内容">
-                    <el-input v-model="queryKey.actionDesc" placeholder="处理内容"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="GetNotify()">查询</el-button>
-                    <el-button type="success" @click="resetTableData()">重置</el-button>
-                </el-form-item>
-            </el-form>
-            <el-table :data="tableData" border stripe class="custom-table">
-                <el-table-column prop="modifyTimeStr" label="日期" width="180">
-                </el-table-column>
-                <el-table-column prop="studentName" label="申请人" width="180">
-                </el-table-column>
-                <el-table-column prop="teacherName" label="处理人" width="180">
-                </el-table-column>
-                <el-table-column prop="actionDesc" label="处理内容">
-                </el-table-column>
-            </el-table>
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                :current-page="currentPage" :page-sizes="[10, 20, 30, 40]" :page-size="100"
-                layout="total, sizes, prev, pager, next, jumper" :total="totalCount">
-            </el-pagination>
+            <el-card class="userCard">
+                <el-form ref="userInfo" :model="userInfo" label-width="100px">
+                    <el-form-item label="教师编号" prop="userId">
+                        <span>{{ userInfo.userId }}</span>
+                    </el-form-item>
+                    <el-form-item label="教师姓名">
+                        <el-input v-model="userInfo.teacherName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码">
+                        <el-input v-model="userInfo.password"></el-input>
+                    </el-form-item>
+                    <el-form-item label="性别" prop="gender">
+                        <el-select v-model="userInfo.gender" placeholder="请选择性别">
+                            <el-option label="男" value="男"></el-option>
+                            <el-option label="女" value="女"></el-option>
+                            <el-option label="其他" value="其他"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="submitUser">提交修改</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
         </div>
     </div>
     </div>
@@ -83,11 +77,7 @@
             data() {
                 return {
                     currentUser: '', // 当前用户
-                    currentPage: 1,
-                    pageSize: 10,
-                    totalCount: "",
-                    queryKey: {},
-                    tableData: []
+                    userInfo: {}
                 }
             },
             mounted() {
@@ -98,33 +88,26 @@
                 }).then(resp => {
                     this.currentUser = resp.data
                 })
-                //获取公告
-                this.GetNotify()
+                // 获取用户信息
+                axios({
+                    methods: "get",
+                    url: contextPath + "/dashboard/selectByTeacherId"
+                }).then(resp => {
+                    this.userInfo = resp.data
+                })
             },
             methods: {
-                GetNotify() {
+                submitUser() {
                     axios({
                         method: "post",
-                        url: contextPath + "/dashboard/selectInNotifyViewByConditions?currentPage=" + this.currentPage + "&pageSize=" + this.pageSize,
-                        data: this.queryKey
+                        url: contextPath + "/dashboard/updateTeacher",
+                        data: this.userInfo
                     }).then(resp => {
-                        this.tableData = resp.data.rows
-                        this.totalCount = resp.data.totalCount
+                        this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        });
                     })
-                },
-                resetTableData() {
-                    this.queryKey = {}
-                    this.GetNotify()
-                },
-                handleSizeChange(val) {
-                    //console.log(`每页 ${val} 条`);
-                    this.pageSize = val;
-                    this.GetNotify();
-                },
-                handleCurrentChange(val) {
-                    //console.log(`当前页: ${val}`);
-                    this.currentPage = val;
-                    this.GetNotify();
                 },
                 logout() {
                     // 执行退出账号逻辑，例如清除登录状态等

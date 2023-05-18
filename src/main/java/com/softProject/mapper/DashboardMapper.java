@@ -29,4 +29,6 @@ public interface DashboardMapper {
     void updateAbsence(@Param("absence") Absence absence);
 
     void updateStudent(@Param("student") Student student);
+
+    void updateTeacher(@Param("teacher") Teacher teacher);
 }

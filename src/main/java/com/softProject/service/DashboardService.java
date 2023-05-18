@@ -21,4 +21,6 @@ public interface DashboardService {
     void updateAbsence(Absence absence);
 
     void updateStudent(Student student);
+
+    void updateTeacher(Teacher teacher);
 }
