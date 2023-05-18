@@ -20,5 +20,5 @@ public interface DashboardMapper {
 
     List<Absence> selectInAbsenceByConditions(@Param("begin") int begin, @Param("size") int size, @Param("absence") Absence absence);
 
-    int selectInAbsenceByCount(Absence absence);
+    int selectInAbsenceByCount(@Param("absence") Absence absence);
 }

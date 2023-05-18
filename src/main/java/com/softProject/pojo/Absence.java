@@ -45,6 +45,9 @@ public class Absence {
     }
 
     public String getEndTimeStr() {
+        if (endTime == null) {
+            return "";
+        }
         SimpleDateFormat ft = new SimpleDateFormat("yyyy" + "年" + "MM" + "月" + "dd" + "日");
         return ft.format(endTime);
     }
@@ -55,6 +58,10 @@ public class Absence {
 
     public boolean isApprove() {
         return approve;
+    }
+
+    public String getApproveStr() {
+        return approve ? "已批准" : "未批准";
     }
 
     public void setApprove(boolean approve) {
