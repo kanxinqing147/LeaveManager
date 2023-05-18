@@ -138,4 +138,15 @@ public class DashboardServiceImpl implements DashboardService {
         sqlSession.close();
         return true;
     }
+
+    @Override
+    public void updateAbsence(Absence absence) {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        DashboardMapper dashboardMapper = sqlSession.getMapper(DashboardMapper.class);
+
+        dashboardMapper.updateAbsence(absence);
+
+        sqlSession.commit();
+        sqlSession.close();
+    }
 }

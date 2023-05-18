@@ -165,6 +165,26 @@ public class DashboardServlet extends BaseServlet{
         boolean flag = dashboardService.insertAbsence(absence);
 
         response.setContentType("text/text;charset=utf-8");
-        response.getWriter().write(flag?"success":"fail");
+        response.getWriter().write(flag ? "success" : "fail");
+    }
+
+    public void updateAbsence(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (dashboardService.selectByTeacherId(user.getUserId()) == null) {
+            response.setContentType("text/text;charset=utf-8");
+            response.getWriter().write("fail");
+            return;
+        }
+
+        BufferedReader br = request.getReader();
+        String params = br.readLine();
+        params = new String(params.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+
+        Absence absence = JSON.parseObject(params, Absence.class);
+        dashboardService.updateAbsence(absence);
+
+        response.setContentType("text/text;charset=utf-8");
+        response.getWriter().write("success");
     }
 }

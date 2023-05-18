@@ -58,6 +58,18 @@
             #{absence.reason}
         );
     </insert>
+    <update id="updateAbsence">
+        UPDATE
+            absence
+        SET
+            start_time = #{absence.startTime},
+            end_time = #{absence.endTime},
+            approve = #{absence.approve},
+            reason = #{absence.reason}
+        WHERE
+            absence_id = #{absence.absenceId}
+        ;
+    </update>
 
     <delete id="deleteByAbsenceIds">
         DELETE FROM

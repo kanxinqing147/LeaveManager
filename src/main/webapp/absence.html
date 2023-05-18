@@ -60,10 +60,10 @@
                     </el-form-item>
             </el-form>
             <el-row>
-                <el-button type="success" @click="dialogFormVisible=true">新增</el-button>
+                <el-button type="success" @click="insertDialogFormVisible=true">新增</el-button>
                 <el-button type="danger" @click="deleteByAbsenceIds">批量删除</el-button>
             </el-row>
-            <el-dialog title="添加请假信息" :visible.sync="dialogFormVisible" :before-close="handleClose">
+            <el-dialog title="添加请假信息" :visible.sync="insertDialogFormVisible" :before-close="insertDialogHandleClose">
                 <el-form ref="form" :model="newInform" label-width="80px" @submit.native.prevent>
                     <el-form-item label="学生学号" prop="studentId">
                         <el-input v-model="newInform.studentId"></el-input>
@@ -82,7 +82,34 @@
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="insertAbsence()">添加</el-button>
-                        <el-button @click="handleClose()">取消</el-button>
+                        <el-button @click="insertDialogHandleClose()">取消</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-dialog>
+            <el-dialog title="编辑请假信息" :visible.sync="updateDialogFormVisible" :before-close="updateDialogHandleClose">
+                <el-form ref="form" :model="updateInfrom" label-width="80px" @submit.native.prevent>
+                    <el-form-item label="学生学号" prop="studentId">
+                        <span>{{ updateInfrom.studentId }}</span>
+                    </el-form-item>
+                    <el-form-item label="请假时间">
+                        <el-date-picker type="date" placeholder="选择日期" v-model="updateInfrom.startTime"
+                            style="width: 100%;">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="销假时间">
+                        <el-date-picker type="date" placeholder="选择日期" v-model="updateInfrom.endTime"
+                            style="width: 100%;">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="批准状态">
+                        <el-switch v-model="updateInfrom.approve"></el-switch>
+                    </el-form-item>
+                    <el-form-item label="请假原因">
+                        <el-input type="textarea" v-model="updateInfrom.reason"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="updateAbsence()">添加</el-button>
+                        <el-button @click="updateDialogHandleClose()">取消</el-button>
                     </el-form-item>
                 </el-form>
             </el-dialog>
@@ -98,6 +125,14 @@
                 <el-table-column prop="approveStr" label="批准状态" width="180">
                 </el-table-column>
                 <el-table-column prop="reason" label="请假原因">
+                </el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <el-button type="primary" plain @click="getRowData(scope.row)">编辑
+                        </el-button>
+                        <el-button type="danger" plain @click="deleteByBookID(scope.row.absenceId)">删除
+                        </el-button>
+                    </template>
                 </el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
@@ -121,7 +156,9 @@
                     totalCount: "", // 总计数
                     queryKey: {}, // 查询对象
                     newInform: {}, // 新增信息
-                    dialogFormVisible: false, // 新增对话框状态
+                    updateInfrom: {}, // 编辑信息
+                    insertDialogFormVisible: false, // 新增对话框状态
+                    updateDialogFormVisible: false, // 编辑对话框状态
                     multipleSelection: [], // 复选框数据
                     tableData: [] // 表格数据
                 }
@@ -202,17 +239,47 @@
                             });
                         } else {
                             this.$message({
-                                    message: "请输入正确的学号",
-                                    type: "error"
-                                })
+                                message: "请输入正确的学号",
+                                type: "error"
+                            })
                         }
-                        this.dialogFormVisible = false
+                        this.insertDialogFormVisible = false
                         this.bookBasicInfo = {}
                     })
                 },
-                handleClose() {
-                    this.dialogFormVisible = false;
+                updateAbsence() {
+                    axios({
+                        method: "post",
+                        url: contextPath + "/dashboard/updateAbsence",
+                        data: this.updateInfrom
+                    }).then(resp => {
+                        if (resp.data == "success") {
+                            this.GetAbsence();
+                            this.$message({
+                                message: "恭喜你，修改成功",
+                                type: "success"
+                            });
+                        } else {
+                            this.$message({
+                                message: "学生只能申请请假",
+                                type: "error"
+                            })
+                        }
+                        this.updateDialogFormVisible = false;
+                        this.updateInfrom = {};
+                    })
+                },
+                getRowData(row) {
+                    this.updateInfrom = row
+                    this.updateDialogFormVisible = true
+                },
+                insertDialogHandleClose() {
+                    this.insertDialogFormVisible = false;
                     this.newInform = {};
+                },
+                updateDialogHandleClose() {
+                    this.updateDialogFormVisible = false;
+                    this.updateInfrom = {};
                 },
                 handleSelectionChange(val) {
                     this.multipleSelection = val;

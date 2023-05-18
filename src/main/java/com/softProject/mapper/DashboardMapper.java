@@ -25,4 +25,6 @@ public interface DashboardMapper {
     void deleteByAbsenceIds(@Param("ids") int[] ids);
 
     void insertAbsence(@Param("absence") Absence absence);
+
+    void updateAbsence(@Param("absence") Absence absence);
 }

@@ -17,4 +17,6 @@ public interface DashboardService {
     void deleteByAbsenceIds(int[] ids);
 
     boolean insertAbsence(Absence absence);
+
+    void updateAbsence(Absence absence);
 }
