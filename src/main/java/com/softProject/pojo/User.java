@@ -1,7 +1,7 @@
 package com.softProject.pojo;
 
 public class User {
-    int userId;
+    Integer userId;
     String password;
 
     public Integer getUserId() {
@@ -22,8 +22,8 @@ public class User {
 
     @Override
     public String toString() {
-        return "user{" +
-                "useerId=" + userId +
+        return "User{" +
+                "userId=" + userId +
                 ", password='" + password + '\'' +
                 '}';
     }

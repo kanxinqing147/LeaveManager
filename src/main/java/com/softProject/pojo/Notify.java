@@ -4,26 +4,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Notify {
-    int notifyId;
-    int applicantId;
+    Integer notifyId;
+    Integer applicantId;
     int handlerId;
     Date createTime;
     Date modifyTime;
     String actionDesc;
 
-    public int getNotifyId() {
+    public Integer getNotifyId() {
         return notifyId;
     }
 
-    public void setNotifyId(int notifyId) {
+    public void setNotifyId(Integer notifyId) {
         this.notifyId = notifyId;
     }
 
-    public int getApplicantId() {
+    public Integer getApplicantId() {
         return applicantId;
     }
 
-    public void setApplicantId(int applicantId) {
+    public void setApplicantId(Integer applicantId) {
         this.applicantId = applicantId;
     }
 
@@ -39,22 +39,12 @@ public class Notify {
         return createTime;
     }
 
-    public String getCreateTimeStr() {
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy" + "年" + "MM" + "月" + "dd" + "日");
-        return ft.format(createTime);
-    }
-
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
     public Date getModifyTime() {
         return modifyTime;
-    }
-
-    public String getModifyTimeStr() {
-        SimpleDateFormat ft = new SimpleDateFormat("yyyy" + "年" + "MM" + "月" + "dd" + "日");
-        return ft.format(modifyTime);
     }
 
     public void setModifyTime(Date modifyTime) {
@@ -67,6 +57,16 @@ public class Notify {
 
     public void setActionDesc(String actionDesc) {
         this.actionDesc = actionDesc;
+    }
+
+    public String getCreateTimeStr() {
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy" + "年" + "MM" + "月" + "dd" + "日");
+        return ft.format(createTime);
+    }
+
+    public String getModifyTimeStr() {
+        SimpleDateFormat ft = new SimpleDateFormat("yyyy" + "年" + "MM" + "月" + "dd" + "日");
+        return ft.format(modifyTime);
     }
 
     @Override

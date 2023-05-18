@@ -3,14 +3,14 @@ package com.softProject.pojo;
 import java.util.List;
 
 public class PageBean<T> {
-    private int totalCount;
+    private Integer totalCount;
     private List<T> rows;
 
-    public int getTotalCount() {
+    public Integer getTotalCount() {
         return totalCount;
     }
 
-    public void setTotalCount(int totalCount) {
+    public void setTotalCount(Integer totalCount) {
         this.totalCount = totalCount;
     }
 
@@ -20,5 +20,13 @@ public class PageBean<T> {
 
     public void setRows(List<T> rows) {
         this.rows = rows;
+    }
+
+    @Override
+    public String toString() {
+        return "PageBean{" +
+                "totalCount=" + totalCount +
+                ", rows=" + rows +
+                '}';
     }
 }
