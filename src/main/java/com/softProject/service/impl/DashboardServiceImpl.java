@@ -149,4 +149,15 @@ public class DashboardServiceImpl implements DashboardService {
         sqlSession.commit();
         sqlSession.close();
     }
+
+    @Override
+    public void updateStudent(Student student) {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        DashboardMapper dashboardMapper = sqlSession.getMapper(DashboardMapper.class);
+
+        dashboardMapper.updateStudent(student);
+
+        sqlSession.commit();
+        sqlSession.close();
+    }
 }

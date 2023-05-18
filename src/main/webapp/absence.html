@@ -29,11 +29,11 @@
                 </el-menu-item>
                 <el-menu-item index="3" @click="linkToNotify">
                     <i class="el-icon-notebook-2"></i>
-                    <span slot="title">公告与文档</span>
+                    <span slot="title">通知</span>
                 </el-menu-item>
                 <el-menu-item index="1" @click="linkToAbsence">
                     <i class="el-icon-date"></i>
-                    <span slot="title">请假状态</span>
+                    <span slot="title">请假信息</span>
                 </el-menu-item>
                 <el-menu-item index="4" @click="linkToUser">
                     <i class="el-icon-user"></i>
@@ -185,6 +185,34 @@
                         this.totalCount = resp.data.totalCount
                     })
                 },
+                deleteByBookID(row) {
+                    this.$confirm('此操作将永久删除数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        let selectedIds = [];
+                        selectedIds[0] = row
+                        axios({
+                            method: "post",
+                            url: contextPath + "/dashboard/deleteByAbsenceIds",
+                            data: selectedIds
+                        }).then(resp => {
+                            if (resp.data == "success") {
+                                this.GetAbsence();
+                                this.$message({
+                                    message: "恭喜你，删除成功",
+                                    type: "success"
+                                });
+                            }
+                        });
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                },
                 deleteByAbsenceIds() {
                     this.$confirm('此操作将永久删除数据, 是否继续?', '提示', {
                         confirmButtonText: '确定',
@@ -316,7 +344,7 @@
                     window.location.href = contextPath + "/dashboard/absence"
                 },
                 linkToUser() {
-                    window.location.href = contextPath + "/dashboard"
+                    window.location.href = contextPath + "/dashboard/user"
                 }
             }
         });

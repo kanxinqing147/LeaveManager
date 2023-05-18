@@ -67,6 +67,32 @@ public class DashboardServlet extends BaseServlet{
         inputStream.close();
     }
 
+    public void user(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String htmlResource = "";
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (dashboardService.selectByTeacherId(user.getUserId()) != null) {
+            htmlResource = "./userTeacher.html";
+        } else {
+            htmlResource = "./userStudent.html";
+        }
+
+        response.setContentType("text/html;charset=utf-8");
+
+        InputStream inputStream = getServletContext().getResourceAsStream(htmlResource);
+        OutputStream outputStream = response.getOutputStream();
+
+        byte[] buff = new byte[1024];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buff)) != -1) {
+            outputStream.write(buff, 0, bytesRead);
+        }
+
+        outputStream.close();
+        inputStream.close();
+
+    }
+
     public void selectInNotifyByConditions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int currentPage = Integer.parseInt(request.getParameter("currentPage"));
         int pageSize = Integer.parseInt(request.getParameter("pageSize"));
@@ -183,6 +209,40 @@ public class DashboardServlet extends BaseServlet{
 
         Absence absence = JSON.parseObject(params, Absence.class);
         dashboardService.updateAbsence(absence);
+
+        response.setContentType("text/text;charset=utf-8");
+        response.getWriter().write("success");
+    }
+
+    public void selectByStudentId(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
+        Student student = dashboardService.selectByStudentId(user.getUserId());
+        String jsonString = JSON.toJSONString(student);
+
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(jsonString);
+    }
+
+    public void selectByTeacherId(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
+        Teacher teacher = dashboardService.selectByTeacherId(user.getUserId());
+        String jsonString = JSON.toJSONString(teacher);
+
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(jsonString);
+    }
+
+    public void updateStudent(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        BufferedReader br = request.getReader();
+        String params = br.readLine();
+        params = new String(params.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
+
+        Student student = JSON.parseObject(params, Student.class);
+        dashboardService.updateStudent(student);
 
         response.setContentType("text/text;charset=utf-8");
         response.getWriter().write("success");

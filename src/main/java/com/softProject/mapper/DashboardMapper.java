@@ -27,4 +27,6 @@ public interface DashboardMapper {
     void insertAbsence(@Param("absence") Absence absence);
 
     void updateAbsence(@Param("absence") Absence absence);
+
+    void updateStudent(@Param("student") Student student);
 }

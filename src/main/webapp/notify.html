@@ -29,11 +29,11 @@
                 </el-menu-item>
                 <el-menu-item index="1" @click="linkToNotify">
                     <i class="el-icon-notebook-2"></i>
-                    <span slot="title">公告与文档</span>
+                    <span slot="title">通知</span>
                 </el-menu-item>
                 <el-menu-item index="3" @click="linkToAbsence">
                     <i class="el-icon-date"></i>
-                    <span slot="title">请假状态</span>
+                    <span slot="title">请假信息</span>
                 </el-menu-item>
                 <el-menu-item index="4" @click="linkToUser">
                     <i class="el-icon-user"></i>
@@ -144,7 +144,7 @@
                     window.location.href = contextPath + "/dashboard/absence"
                 },
                 linkToUser() {
-                    window.location.href = contextPath + "/dashboard"
+                    window.location.href = contextPath + "/dashboard/user"
                 }
             }
         });

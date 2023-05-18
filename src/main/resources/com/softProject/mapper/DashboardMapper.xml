@@ -71,6 +71,20 @@
         ;
     </update>
 
+    <update id="updateStudent">
+        UPDATE
+            student
+        SET
+            student_name = #{student.studentName},
+            password = #{student.password},
+            gender = #{student.gender},
+            procession = #{student.procession},
+            grade = #{student.grade}
+        WHERE
+            student_id = #{student.userId}
+        ;
+    </update>
+
     <delete id="deleteByAbsenceIds">
         DELETE FROM
             absence

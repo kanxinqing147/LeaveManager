@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./node_modules/vue/dist/vue.min.js"></script>
-    <script src="./node_modules/element-ui/lib/index.js"></script>
-    <script src="./node_modules/axios/dist/axios.min.js"></script>
-    <script src="./js/util.js"></script>
-    <link rel="stylesheet" href="./node_modules/element-ui/lib/theme-chalk/index.css">
+    <script src="../node_modules/vue/dist/vue.min.js"></script>
+    <script src="../node_modules/element-ui/lib/index.js"></script>
+    <script src="../node_modules/axios/dist/axios.min.js"></script>
+    <script src="../js/util.js"></script>
+    <link rel="stylesheet" href="../node_modules/element-ui/lib/theme-chalk/index.css">
     <title>请销假系统</title>
 </head>
 
@@ -23,50 +23,70 @@
                 </el-button>
             </div>
             <el-menu default-active="1" class="sidebar-menu" router>
-                <el-menu-item index="1" @click="linkToDashboard">
+                <el-menu-item index="2" @click="linkToDashboard">
                     <i class="el-icon-s-home"></i>
                     <span slot="title">控制台</span>
                 </el-menu-item>
-                <el-menu-item index="2" @click="linkToNotify">
+                <el-menu-item index="3" @click="linkToNotify">
                     <i class="el-icon-notebook-2"></i>
                     <span slot="title">通知</span>
                 </el-menu-item>
-                <el-menu-item index="3"  @click="linkToAbsence">
+                <el-menu-item index="4" @click="linkToAbsence">
                     <i class="el-icon-date"></i>
                     <span slot="title">请假信息</span>
                 </el-menu-item>
-                <el-menu-item index="4" @click="linkToUser">
+                <el-menu-item index="1" @click="linkToUser">
                     <i class="el-icon-user"></i>
                     <span slot="title">个人中心</span>
                 </el-menu-item>
             </el-menu>
         </div>
         <div class="content">
-            <h2 class="title">公告</h2>
-            <div class="notice-list">
-                <transition-group name="fade">
-                    <div v-for="notice in notices" :key="notice.notifyId" class="notice">
-                        <div class="notice-header">
-                            <h3>{{ notice.modifyTimeStr }}</h3>
-                            <span class="notice-date">{{ notice.actionDesc }}</span>
-                        </div>
-                        <p>{{ notice.applicantId }}号学生向{{ notice.handlerId }}号处理人{{ notice.actionDesc }}</p>
-                    </div>
-                </transition-group>
-            </div>
+            <el-card class="userCard">
+                <el-form ref="userInfo" :model="userInfo" label-width="100px">
+                    <el-form-item label="学生学号" prop="userId">
+                        <span>{{ userInfo.userId }}</span>
+                    </el-form-item>
+                    <el-form-item label="学生姓名">
+                        <el-input v-model="userInfo.studentName"></el-input>
+                    </el-form-item>
+                    <el-form-item label="密码">
+                        <el-input v-model="userInfo.password"></el-input>
+                    </el-form-item>
+                    <el-form-item label="性别" prop="gender">
+                        <el-select v-model="userInfo.gender" placeholder="请选择性别">
+                            <el-option label="男" value="男"></el-option>
+                            <el-option label="女" value="女"></el-option>
+                            <el-option label="其他" value="其他"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="专业">
+                        <el-input v-model="userInfo.procession"></el-input>
+                    </el-form-item>
+                    <el-form-item label="班级">
+                        <el-input v-model="userInfo.grade"></el-input>
+                    </el-form-item>
+                    <el-form-item label="辅导员编号" prop="userId">
+                        <span>{{ userInfo.counsellor }}</span>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="submitUser">提交修改</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
         </div>
+    </div>
     </div>
 
     <script>
         var contextPath = getContextPath();
 
-        new Vue({
+        let a = new Vue({
             el: ".dashboard",
             data() {
                 return {
                     currentUser: '', // 当前用户
-                    notices: [], // 公告列表
-                    queryKey: {}
+                    userInfo: {},
                 }
             },
             mounted() {
@@ -77,16 +97,27 @@
                 }).then(resp => {
                     this.currentUser = resp.data
                 })
-                //获取公告
+                // 获取用户信息
                 axios({
-                    method: "post",
-                    url: contextPath + "/dashboard/selectInNotifyByConditions?currentPage=" + 1 + "&pageSize=" + 3,
-                    data: this.queryKey
+                    methods: "get",
+                    url: contextPath + "/dashboard/selectByStudentId"
                 }).then(resp => {
-                    this.notices = resp.data.rows
+                    this.userInfo = resp.data
                 })
             },
             methods: {
+                submitUser() {
+                    axios({
+                        method: "post",
+                        url: contextPath + "/dashboard/updateStudent",
+                        data: this.userInfo
+                    }).then(resp => {
+                        this.$message({
+                            message: '修改成功',
+                            type: 'success'
+                        });
+                    })
+                },
                 logout() {
                     // 执行退出账号逻辑，例如清除登录状态等
                     axios({
@@ -157,7 +188,6 @@
             margin-top: 20px;
         }
 
-
         .el-menu-item {
             color: white;
         }
@@ -171,35 +201,8 @@
             padding: 20px;
         }
 
-        .title {
-            margin-bottom: 20px;
-        }
-
-        .notice-list {
-            position: relative;
-        }
-
-        .notice {
-            background-color: #f7f7f7;
-            border-radius: 4px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .notice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .notice-date {
-            color: #888;
-        }
-
-        .notice p {
-            margin: 0;
+        .custom-table {
+            width: 90%;
         }
     </style>
 </body>

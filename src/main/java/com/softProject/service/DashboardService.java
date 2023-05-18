@@ -19,4 +19,6 @@ public interface DashboardService {
     boolean insertAbsence(Absence absence);
 
     void updateAbsence(Absence absence);
+
+    void updateStudent(Student student);
 }
