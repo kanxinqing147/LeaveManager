@@ -112,4 +112,15 @@ public class DashboardServiceImpl implements DashboardService {
         sqlSession.close();
         return  pageBean;
     }
+
+    @Override
+    public void deleteByAbsenceIds(int[] ids) {
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        DashboardMapper dashboardMapper = sqlSession.getMapper(DashboardMapper.class);
+
+        dashboardMapper.deleteByAbsenceIds(ids);
+
+        sqlSession.commit();
+        sqlSession.close();
+    }
 }

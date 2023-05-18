@@ -47,6 +47,17 @@
         <result property="reason" column="reason"/>
     </resultMap>
 
+    <delete id="deleteByAbsenceIds">
+        DELETE FROM
+            absence
+        WHERE
+            absence_id
+        IN
+        <foreach collection="ids" item="absenceId" open="(" separator="," close=")">
+            #{absenceId}
+        </foreach>
+    </delete>
+
     <select id="selectInNotifyByConditions" resultMap="NotifyResultMap">
         SELECT
             *

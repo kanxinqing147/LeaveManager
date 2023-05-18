@@ -128,14 +128,31 @@ public class DashboardServlet extends BaseServlet{
         BufferedReader br = request.getReader();
         String params = br.readLine();
         params = new String(params.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-        // NotifyView notifyView = JSON.parseObject(params, NotifyView.class);
         Absence absence = JSON.parseObject(params, Absence.class);
 
         PageBean<Absence> pageBean = dashboardService.selectInAbsenceByConditions(currentPage, pageSize, absence);
-        // PageBean<NotifyView> pageBean = dashboardService.selectInNotifyViewByConditions(currentPage, pageSize, notifyView);
         String jsonString = JSON.toJSONString(pageBean);
 
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(jsonString);
+    }
+
+    public void deleteByAbsenceIds(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        if (dashboardService.selectByTeacherId(user.getUserId()) == null) {
+            response.setContentType("text/text;charset=utf-8");
+            response.getWriter().write("fail");
+            return;
+        }
+
+        BufferedReader br = request.getReader();
+        String params = br.readLine();
+
+        int[] ids = JSON.parseObject(params, int[].class);
+        dashboardService.deleteByAbsenceIds(ids);
+
+        response.setContentType("text/text;charset=utf-8");
+        response.getWriter().write("success");
     }
 }
