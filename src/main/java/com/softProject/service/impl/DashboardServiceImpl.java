@@ -90,16 +90,22 @@ public class DashboardServiceImpl implements DashboardService {
         int begin = (currentPage - 1) * pageSize;
         int size = pageSize;
 
+        String studentName = absence.getStudentName();
+        if (studentName != null && studentName.length() > 0) {
+            absence.setStudentName("%" + studentName + "%");
+        }
+        String reason = absence.getReason();
+        if (reason != null && reason.length() > 0) {
+            absence.setReason("%" + reason + "%");
+        }
+
         SqlSession sqlSession = sqlSessionFactory.openSession();
         DashboardMapper dashboardMapper = sqlSession.getMapper(DashboardMapper.class);
 
         List<Absence> absences =  dashboardMapper.selectInAbsenceByConditions(begin, size, absence);
         int totalPages = dashboardMapper.selectInAbsenceByCount(absence);
-        // List<NotifyView> notifyViews = dashboardMapper.selectInNotifyViewByConditions(begin, size, notifyView);
-        // int totalPages = dashboardMapper.selectInNotifyViewCount(notifyView);
 
         PageBean<Absence> pageBean = new PageBean<>();
-        // PageBean<NotifyView> pageBean = new PageBean<>();
         pageBean.setTotalCount(totalPages);
         pageBean.setRows(absences);
 
