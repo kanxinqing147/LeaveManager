@@ -93,22 +93,6 @@ public class DashboardServlet extends BaseServlet{
 
     }
 
-    public void selectInNotifyByConditions(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int currentPage = Integer.parseInt(request.getParameter("currentPage"));
-        int pageSize = Integer.parseInt(request.getParameter("pageSize"));
-
-        BufferedReader br = request.getReader();
-        String params = br.readLine();
-        params = new String(params.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
-        Notify notify = JSON.parseObject(params, Notify.class);
-
-        PageBean<Notify> pageBean = dashboardService.selectByCondition(currentPage, pageSize, notify);
-        String jsonString = JSON.toJSONString(pageBean);
-
-        response.setContentType("text/json;charset=utf-8");
-        response.getWriter().write(jsonString);
-    }
-
     public void selectInNotifyViewByConditions(HttpServletRequest request, HttpServletResponse response) throws IOException {
         int currentPage = Integer.parseInt(request.getParameter("currentPage"));
         int pageSize = Integer.parseInt(request.getParameter("pageSize"));

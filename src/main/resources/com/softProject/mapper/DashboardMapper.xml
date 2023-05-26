@@ -20,15 +20,6 @@
         <result property="password" column="password"/>
     </resultMap>
 
-    <resultMap id="NotifyResultMap" type="Notify">
-        <result property="notifyId" column="notify_id"/>
-        <result property="applicantId" column="applicant_id"/>
-        <result property="handlerId" column="handler_id"/>
-        <result property="createTime" column="create_time"/>
-        <result property="modifyTime" column="modify_time"/>
-        <result property="actionDesc" column="action_desc"/>
-    </resultMap>
-
     <resultMap id="NotifyViewResultMap" type="NotifyView">
         <result property="notifyId" column="notify_id"/>
         <result property="studentName" column="student_name"/>
@@ -115,38 +106,6 @@
         </foreach>
     </delete>
 
-    <select id="selectInNotifyByConditions" resultMap="NotifyResultMap">
-        SELECT
-            *
-        FROM
-            notify
-        <where>
-            <if test="notify.notifyID != null and notify.notifyID != ''">
-                AND notify_id like #{notify.notifyID}
-            </if>
-            <if test="notify.applicantId != null and notify.applicantId != ''">
-                AND applicant_id like #{notify.notifyID}
-            </if>
-            <if test="notify.handlerId != null and notify.handlerId != ''">
-                AND handler_id like #{notify.handlerId}
-            </if>
-            <if test="notify.createTime != null and notify.createTime != ''">
-                AND create_time like #{notify.createTime}
-            </if>
-            <if test="notify.modifyTime != null and notify.modifyTime != ''">
-                AND modify_time like #{notify.modifyTime}
-            </if>
-            <if test="notify.actionDesc != null and notify.actionDesc != ''">
-                AND actionDesc like #{notify.actionDesc}
-            </if>
-        </where>
-        ORDER BY
-            DATE(modify_time) DESC
-        LIMIT
-            #{begin},
-            #{size}
-    </select>
-
     <select id="selectInNotifyViewByConditions" resultMap="NotifyViewResultMap">
         SELECT
             *
@@ -177,33 +136,6 @@
         LIMIT
             #{begin},
             #{size}
-    </select>
-
-    <select id="selectInNotifyCount" resultType="int">
-        SELECT
-            count(*)
-        FROM
-            notify
-        <where>
-            <if test="notify.notifyID != null and notify.notifyID != ''">
-                AND notify_id like #{notify.notifyID}
-            </if>
-            <if test="notify.applicantId != null and notify.applicantId != ''">
-                AND applicant_id like #{notify.notifyID}
-            </if>
-            <if test="notify.handlerId != null and notify.handlerId != ''">
-                AND handler_id like #{notify.handlerId}
-            </if>
-            <if test="notify.createTime != null and notify.createTime != ''">
-                AND create_time like #{notify.createTime}
-            </if>
-            <if test="notify.modifyTime != null and notify.modifyTime != ''">
-                AND modify_time like #{notify.modifyTime}
-            </if>
-            <if test="notify.actionDesc != null and notify.actionDesc != ''">
-                AND actionDesc like #{notify.actionDesc}
-            </if>
-        </where>
     </select>
 
     <select id="selectByStudentId" resultMap="StudentResultMapper">

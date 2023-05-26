@@ -3,9 +3,6 @@ package com.softProject.service;
 import com.softProject.pojo.*;
 
 public interface DashboardService {
-
-    PageBean<Notify> selectByCondition(int currentPage, int pageSize, Notify notify);
-
     PageBean<NotifyView> selectInNotifyViewByConditions(int currentPage, int pageSize, NotifyView notifyView);
 
     Student selectByStudentId(int studentId);

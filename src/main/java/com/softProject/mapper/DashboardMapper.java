@@ -6,11 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface DashboardMapper {
-    List<Notify> selectInNotifyByConditions(@Param("begin") int begin, @Param("size") int size, @Param("notify") Notify notify);
-
     List<NotifyView> selectInNotifyViewByConditions(@Param("begin") int begin, @Param("size") int size, @Param("notifyView") NotifyView notifyView);
-
-    int selectInNotifyCount(@Param("notify") Notify notify);
 
     int selectInNotifyViewCount(@Param("notifyView") NotifyView notifyView);
 

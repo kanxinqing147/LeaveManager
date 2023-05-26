@@ -13,25 +13,6 @@ public class DashboardServiceImpl implements DashboardService {
     private final SqlSessionFactory sqlSessionFactory = SqlSessionFactoryUtils.getSqlSessionFactory();
 
     @Override
-    public PageBean<Notify> selectByCondition(int currentPage, int pageSize, Notify notify) {
-        int begin = (currentPage - 1) * pageSize;
-        int size = pageSize;
-
-        SqlSession sqlSession = sqlSessionFactory.openSession();
-        DashboardMapper dashboardMapper = sqlSession.getMapper(DashboardMapper.class);
-
-        List<Notify> notifies = dashboardMapper.selectInNotifyByConditions(begin, size, notify);
-        int totalPages = dashboardMapper.selectInNotifyCount(notify);
-
-        PageBean<Notify> pageBean = new PageBean<>();
-        pageBean.setTotalCount(totalPages);
-        pageBean.setRows(notifies);
-
-        sqlSession.close();
-        return  pageBean;
-    }
-
-    @Override
     public PageBean<NotifyView> selectInNotifyViewByConditions(int currentPage, int pageSize, NotifyView notifyView) {
         int begin = (currentPage - 1) * pageSize;
         int size = pageSize;
