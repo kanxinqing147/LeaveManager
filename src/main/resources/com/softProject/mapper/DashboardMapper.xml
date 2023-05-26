@@ -62,10 +62,17 @@
         UPDATE
             absence
         SET
-            start_time = #{absence.startTime},
-            end_time = #{absence.endTime},
-            approve = #{absence.approve},
-            reason = #{absence.reason}
+            <if test="absence.startTime != null">
+                start_time = #{absence.startTime},
+            </if>
+            <if test="absence.approve != null">
+                approve = #{absence.approve},
+            </if>
+            <if test="absence.reason != null and absence.reason != ''">
+                reason = #{absence.reason},
+            </if>
+            end_time = #{absence.endTime}
+
         WHERE
             absence_id = #{absence.absenceId}
         ;
@@ -133,6 +140,8 @@
                 AND actionDesc like #{notify.actionDesc}
             </if>
         </where>
+        ORDER BY
+            DATE(modify_time) DESC
         LIMIT
             #{begin},
             #{size}
@@ -163,9 +172,11 @@
                 AND actionDesc like #{notifyView.actionDesc}
             </if>
         </where>
+        ORDER BY
+            DATE(modify_time) DESC
         LIMIT
-        #{begin},
-        #{size}
+            #{begin},
+            #{size}
     </select>
 
     <select id="selectInNotifyCount" resultType="int">

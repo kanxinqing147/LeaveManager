@@ -50,7 +50,7 @@
                             <h3>{{ notice.modifyTimeStr }}</h3>
                             <span class="notice-date">{{ notice.actionDesc }}</span>
                         </div>
-                        <p>{{ notice.applicantId }}号学生向{{ notice.handlerId }}号处理人{{ notice.actionDesc }}</p>
+                        <p>{{ notice.studentName }}向{{ notice.teacherName }}{{ notice.actionDesc }}</p>
                     </div>
                 </transition-group>
             </div>
@@ -80,7 +80,7 @@
                 //获取公告
                 axios({
                     method: "post",
-                    url: contextPath + "/dashboard/selectInNotifyByConditions?currentPage=" + 1 + "&pageSize=" + 3,
+                    url: contextPath + "/dashboard/selectInNotifyViewByConditions?currentPage=" + 1 + "&pageSize=" + 3,
                     data: this.queryKey
                 }).then(resp => {
                     this.notices = resp.data.rows

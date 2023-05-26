@@ -208,6 +208,13 @@ public class DashboardServlet extends BaseServlet{
             return;
         }
 
+        if (user.getUserId() == absence.getStudentId()) {
+            Absence newAbsence = new Absence();
+            newAbsence.setAbsenceId(absence.getAbsenceId());
+            newAbsence.setEndTime(absence.getEndTime());
+            absence = newAbsence;
+        }
+
         dashboardService.updateAbsence(absence);
 
         response.setContentType("text/text;charset=utf-8");
